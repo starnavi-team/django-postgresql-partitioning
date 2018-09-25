@@ -12,46 +12,24 @@ DATE_FIELDS = ['DateTimeField', 'DateField']
 
 class Partitioning:
     def __init__(self, model):
-        self.parent_table = model._meta.db_table
-        self.column = model.partitioning.get('column')
-        self.type = model.partitioning.get('type')
+        self.model = model
 
-        if not self.column or not self.type:
+    def validate(self, config):
+        if not config['column'] or not config['type']:
             raise ValueError('({}) Invalid configuration. type, column are required.'.format(
-                model.__name__
+                self.model
             ))
 
-        if not self.type in ALLOWED_TYPES:
+        if not config['type'] in ALLOWED_TYPES:
             raise ValueError('({}) Type {} unsupported. Allowed types: {}.'.format(
-                model.__name__, self.type, ', '.join(ALLOWED_TYPES)
+                self.model, config['type'], ', '.join(ALLOWED_TYPES)
             ))
 
-        if self.type.startswith('range_') and \
-                not model._meta.get_field(self.column).get_internal_type() in DATE_FIELDS:
+        if config['type'].startswith('range_') and \
+                not self.model._meta.get_field(config['column']).get_internal_type() in DATE_FIELDS:
             raise ValueError('({}) Invalid field type for {}. Allowed field types: {}.'.format(
-                model.__name__, self.type, ', '.join(DATE_FIELDS)
+                self.model, config['type'], ', '.join(DATE_FIELDS)
             ))
-
-    def get_variables(self):
-        variables = {
-            'parent_table': self.parent_table,
-            'column': self.column,
-        }
-
-        if self.type == 'list':
-            variables.update(
-                tablename=self.get_list_tablename(self.column),
-                checks=self.get_list_check(self.column)
-            )
-
-        if self.type.startswith('range_'):
-            _, interval = self.type.split('_')
-            variables.update(
-                tablename=self.get_date_range_tablename(self.column, interval),
-                checks=self.get_date_range_check(self.column, interval)
-            )
-
-        return variables
 
     def get_list_tablename(self, column):
         return "'{column}_' || NEW.{column}".format(column=column)
@@ -70,18 +48,44 @@ class Partitioning:
         return "'{column} >= ''' || {start} || ''' AND {column} < ''' || {end} || ''''" \
             .format(column=column, start=start, end=end)
 
+    def get_variables(self):
+        parent_table = self.model._meta.db_table
+        table_name = ["'{}'".format(parent_table)]
+        checks = []
+
+        for config in self.model.partitioning:
+            self.validate(config)
+
+            if config['type'] == 'list':
+                table_name.append(self.get_list_tablename(config['column']))
+                checks.append(self.get_list_check(config['column']))
+
+            if config['type'].startswith('range_'):
+                _, interval = config['type'].split('_')
+                table_name.append(self.get_date_range_tablename(config['column'], interval))
+                checks.append(self.get_date_range_check(config['column'], interval))
+
+        table_name = " || '__' || ".join(table_name)
+        checks = " || ' AND ' || ".join(checks)
+
+        return {
+            'parent_table': parent_table,
+            'table_name': table_name,
+            'checks': checks
+        }
+
     def setup(self):
         with connection.cursor() as cursor:
             cursor.execute('''
                 CREATE OR REPLACE FUNCTION {parent_table}_insert_child()
                 RETURNS TRIGGER AS $$
                     DECLARE
-                        tablename VARCHAR;
+                        tablename TEXT;
                         checks TEXT;
                     BEGIN
-                        tablename := '{parent_table}__' || {tablename};                  
+                        tablename := {table_name};
                         checks := {checks};
-                        
+
                         IF NOT EXISTS(
                             SELECT 1 FROM information_schema.tables WHERE table_name = tablename
                         )
@@ -93,12 +97,12 @@ class Partitioning:
                                 ) INHERITS ({parent_table});';
                             END;
                         END IF;
-    
+
                         EXECUTE 'INSERT INTO ' || tablename || ' VALUES (($1).*);' USING NEW;
                         RETURN NEW;
                     END;
                 $$ LANGUAGE plpgsql;
-    
+
                 DO $$
                 BEGIN
                 IF NOT EXISTS(
@@ -112,7 +116,7 @@ class Partitioning:
                         FOR EACH ROW EXECUTE PROCEDURE {parent_table}_insert_child();
                 END IF;
                 END $$;
-    
+
                 CREATE OR REPLACE FUNCTION {parent_table}_delete_master()
                 RETURNS TRIGGER AS $$
                     BEGIN
@@ -120,7 +124,7 @@ class Partitioning:
                         RETURN NEW;
                     END;
                 $$ LANGUAGE plpgsql;
-    
+
                 DO $$
                 BEGIN
                 IF NOT EXISTS(
