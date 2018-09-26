@@ -35,7 +35,7 @@ class Partitioning:
         return "'{column}_' || NEW.{column}".format(column=column)
 
     def get_list_check(self, column):
-        return "'{column} = ' || NEW.{column}".format(column=column)
+        return "'{column} = ''' || NEW.{column} || ''''".format(column=column)
 
     def get_date_range_tablename(self, column, interval):
         return "'{column}_' || TO_CHAR(NEW.{column}, '{format}')".format(
