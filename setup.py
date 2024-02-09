@@ -51,10 +51,10 @@ setup(
     author='starnavi.io',
     author_email='hello@starnavi.io',
     install_requires=[
-        'Django>=1.11,<5.1', 'psycopg2-binary>=2.7.5,<3.0', 'setuptools'
+        'Django>=1.11,<5.1', 'setuptools'
     ],
     tests_require=[
-        'Django>=1.11,<5.1', 'psycopg2-binary>=2.7.5,<3.0', 'setuptools'
+        'Django>=1.11,<5.1', 'setuptools'
     ],
     cmdclass={'test': TestCommand},
 )
