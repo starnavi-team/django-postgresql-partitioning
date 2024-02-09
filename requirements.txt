@@ -1,6 +1,5 @@
 # Main
 Django>=1.11,<5.1
-# psycopg2-binary>=2.7.5,<3.0
 setuptools
 
 # wheel for PyPI installs
