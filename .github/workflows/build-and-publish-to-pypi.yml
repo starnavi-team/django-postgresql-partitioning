@@ -1,12 +1,10 @@
-name: Test, Build & Publish to TestPyPI
+name: Test, Build & Publish to PyPI
 
 on:
   push:
-#    tags:
-#      - 'v*'
-#      - 'release*'
-    branches:
-      - develop
+    tags:
+      - 'v*'
+      - 'release*'
 
 jobs:
   testing-on-py-36:
@@ -21,7 +19,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -93,9 +90,8 @@ jobs:
       - testing-on-py-36
       - testing-on-py-37-38-39-310-311-312
     environment:
-#      name: pypi
-      name: testpypi
-#      url: https://pypi.org/p/django-partitioning/
+      name: pypi
+      url: https://pypi.org/p/django-partitioning/
     permissions:
       id-token: write
     steps:
@@ -118,5 +114,4 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true # For Debugging in case of errors
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.PYPI_API_TOKEN }}
