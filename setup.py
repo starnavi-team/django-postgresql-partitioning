@@ -1,6 +1,4 @@
-from distutils.core import Command
-
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Command
 
 
 class TestCommand(Command):
@@ -22,7 +20,7 @@ class TestCommand(Command):
                     'ENGINE': 'django.db.backends.postgresql',
                     'NAME': 'partitioning',
                     'USER': 'postgres',
-                    'PASSWORD': '123456',
+                    'PASSWORD': 'postgres',
                     'HOST': '127.0.0.1',
                     'PORT': '5432',
                 }
@@ -43,7 +41,7 @@ setup(
     long_description=open('README.md').read(),
     author='Soin Sergey',
     author_email='soins1992@gmail.com',
-    install_requires=['Django >= 1.11'],
-    tests_require=['Django >= 1.11'],
+    install_requires=['Django >= 1.11', 'setuptools'],
+    tests_require=['Django >= 1.11', 'setuptools'],
     cmdclass={'test': TestCommand},
 )
