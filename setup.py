@@ -39,7 +39,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='django-partitioning',
-    version='0.1.1',
+    version='0.2',
     # url='https://github.com/starnavi-team/django-postgres-partitioning',
     url='https://github.com/BohdanYatsyna/django-postgres-partitioning',
     packages=find_packages(),
