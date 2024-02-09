@@ -60,7 +60,12 @@ $ python manage.py setup_partitioning app_name
 
 `column` - column, used to determine which partition record belongs to.
 
-## Testing
+## Testing 
+
+Clone the repo:
+```bash
+$ git clone https://github.com/starnavi-team/django-postgres-partitioning.git
+```
 
 Install requirements.
 
@@ -68,7 +73,7 @@ Install requirements.
 $ pip install -r requirements.txt
 ```
 
-Use the excellent [tox](http://tox.readthedocs.org/en/latest/) testing tool to run the tests against all supported versions of Python and Django. Install tox globally, and then simply run:
+Use [tox](http://tox.readthedocs.org/en/latest/) testing tool to run the tests against all supported versions of Python and Django. Install tox globally, and then simply run:
 
 ```bash
 $ tox
