@@ -10,7 +10,8 @@ if partition doesn't exist, it will be created for you automatically.
 ## Requirements
 - Django >=1.11 <=5.0
 - PostgreSQL >= 8.0
-- psycopg2-binary >=2.7.5 <= 2.9.9
+
+Also, note **psycopg2-binary (2.7.5-2.9.9)** will be needed as PostgreSQL database adapter.
 
 ## Installation
 Install using `pip`...
