@@ -17,7 +17,7 @@ Also, note **psycopg2-binary (2.7.5-2.9.9)** will be needed as PostgreSQL databa
 Install using `pip`...
 
 ```bash
-$ pip install django-partitioning
+$ pip install django-postgresql-partitioning
 ```
 
 ## Configuration
@@ -64,7 +64,7 @@ $ python manage.py setup_partitioning app_name
 
 Clone the repo:
 ```bash
-$ git clone https://github.com/starnavi-team/django-postgres-partitioning.git
+$ git clone https://github.com/starnavi-team/django-postgresql-partitioning.git
 ```
 
 Install requirements.
