@@ -8,12 +8,16 @@ After setup partitioning, record will be inserted into the correct partition,
 if partition doesn't exist, it will be created for you automatically.
 
 ## Requirements
-- Django >= 1.11
+- Django >=1.11 <=5.0
 - PostgreSQL >= 8.0
 
+Also, note **psycopg2-binary (2.7.5-2.9.9)** will be needed as PostgreSQL database adapter.
+
 ## Installation
-```
-pip install git+https://github.com/starnavi-team/django-partitioning.git
+Install using `pip`...
+
+```bash
+$ pip install django-postgresql-partitioning
 ```
 
 ## Configuration
@@ -42,8 +46,8 @@ class Message(models.Model):
 ```
 
 - Lastly setup partitioning:
-```
-python manage.py setup_partitioning app_name
+```bash
+$ python manage.py setup_partitioning app_name
 ```
 
 ## Available settings
@@ -55,3 +59,22 @@ python manage.py setup_partitioning app_name
 - range_year
 
 `column` - column, used to determine which partition record belongs to.
+
+## Testing 
+
+Clone the repo:
+```bash
+$ git clone https://github.com/starnavi-team/django-postgresql-partitioning.git
+```
+
+Install requirements.
+
+```bash
+$ pip install -r requirements.txt
+```
+
+Use [tox](http://tox.readthedocs.org/en/latest/) testing tool to run the tests against all supported versions of Python and Django. Install tox globally, and then simply run:
+
+```bash
+$ tox
+```

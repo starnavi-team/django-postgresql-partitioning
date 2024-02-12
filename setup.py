@@ -1,6 +1,6 @@
-from distutils.core import Command
-
-from setuptools import find_packages, setup
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from setuptools import setup, Command, find_namespace_packages
 
 
 class TestCommand(Command):
@@ -22,8 +22,8 @@ class TestCommand(Command):
                     'ENGINE': 'django.db.backends.postgresql',
                     'NAME': 'partitioning',
                     'USER': 'postgres',
-                    'PASSWORD': '123456',
-                    'HOST': '127.0.0.1',
+                    'PASSWORD': 'postgres',
+                    'HOST': 'localhost',
                     'PORT': '5432',
                 }
             },
@@ -33,17 +33,43 @@ class TestCommand(Command):
         call_command('test', 'tests')
 
 
+with open('README.md', 'r', encoding='utf-8') as f:
+    long_description = f.read()
+
+
 setup(
-    name='django-partitioning',
-    version='0.1',
-    packages=find_packages(),
+    name='django-postgresql-partitioning',
+    version='0.1.1',
+    url='https://github.com/starnavi-team/django-postgresql-partitioning',
+    packages=find_namespace_packages(),
     include_package_data=True,
     license='BSD License',
-    description='Add partitioning to django models',
-    long_description=open('README.md').read(),
-    author='Soin Sergey',
-    author_email='soins1992@gmail.com',
-    install_requires=['Django >= 1.11'],
-    tests_require=['Django >= 1.11'],
+    description='Add PostgreSQL table partitioning to Django models',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    author='starnavi.io',
+    author_email='hello@starnavi.io',
+    install_requires=[
+        'Django>=1.11,<5.1', 'setuptools'
+    ],
+    tests_require=[
+        'Django>=1.11,<5.1', 'setuptools'
+    ],
     cmdclass={'test': TestCommand},
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Framework :: Django',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+    ]
 )
