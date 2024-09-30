@@ -70,6 +70,7 @@ class Partitioning:
 
         return {
             'parent_table': parent_table,
+            'primary_key': self.model._meta.pk.name,
             'table_name': table_name,
             'checks': checks
         }
@@ -120,7 +121,7 @@ class Partitioning:
                 CREATE OR REPLACE FUNCTION {parent_table}_delete_master()
                 RETURNS TRIGGER AS $$
                     BEGIN
-                        DELETE FROM ONLY {parent_table} WHERE id = NEW.id;
+                        DELETE FROM ONLY {parent_table} WHERE {primary_key} = NEW.{primary_key};
                         RETURN NEW;
                     END;
                 $$ LANGUAGE plpgsql;
