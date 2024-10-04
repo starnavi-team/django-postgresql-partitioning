@@ -114,4 +114,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true # For Debugging in case of errors
+          skip-existing: true
           password: ${{ secrets.PYPI_API_TOKEN }}
