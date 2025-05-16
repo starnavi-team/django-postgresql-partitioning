@@ -1,5 +1,5 @@
 # Main
-Django>=1.11,<5.1
+Django>=1.11,<6
 setuptools
 
 # wheel for PyPI installs
