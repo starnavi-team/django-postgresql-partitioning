@@ -39,7 +39,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='django-postgresql-partitioning',
-    version='0.1.1',
+    version='0.1.3',
     url='https://github.com/starnavi-team/django-postgresql-partitioning',
     packages=find_namespace_packages(),
     include_package_data=True,
@@ -49,11 +49,14 @@ setup(
     long_description_content_type='text/markdown',
     author='starnavi.io',
     author_email='hello@starnavi.io',
+    requires=[
+        'Django(>=1.11,<6.0)'
+    ],
     install_requires=[
-        'Django>=1.11,<5.1', 'setuptools'
+        'setuptools'
     ],
     tests_require=[
-        'Django>=1.11,<5.1', 'setuptools'
+        'Django(>=1.11,<6.0)', 'setuptools'
     ],
     cmdclass={'test': TestCommand},
     classifiers=[
